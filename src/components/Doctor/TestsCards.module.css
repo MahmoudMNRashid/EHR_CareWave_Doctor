@@ -1,0 +1,88 @@
+.TestsCard {
+
+    background: #606c88;
+    background: linear-gradient(to right, #3f4c6b, #606c88);
+    max-width:100% ;
+    min-height: 100px;
+    padding: 0px 20px 20px;
+    border-radius: 20px;
+}
+
+
+.title {
+    padding: 5px 0px;
+    font-weight: 600;
+    font-size: 25px;
+    /* background-color: aqua; */
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: #252934;
+
+}
+
+.title h2 {
+    border-bottom: 2px solid #252934;
+}
+/* ______________________________________ */
+.list{
+    display: grid;
+    gap: 30px;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(350px,1fr));
+}
+        
+
+/* ____________________________________ */
+.GeneralInformationTests {
+
+
+    width: 100%;
+    height: 200px;
+    border-radius: 15px;
+    background-color: #bebebe;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 20px 15px;
+
+
+}
+
+.GeneralInformationTests>div {
+    display: flex;
+    align-items: center;
+
+    gap: 30px;
+    
+}
+
+
+.GeneralInformationTests>div:nth-child(2) {
+    align-items: flex-start;   
+    overflow: auto auto;
+   
+
+
+}
+
+.GeneralInformationTests>div:nth-child(2) p {
+    width: 80%;
+    word-break:break-all;   
+}
+
+.GeneralInformationTests>div p {
+    color: whitesmoke;
+    font-size: 14px;
+
+
+
+}
+
+.GeneralInformationTests>div span {
+    color: #252934;
+    border-bottom: 2px solid #252934;
+    margin-bottom: 3px;
+    font-weight: 600;
+
+}

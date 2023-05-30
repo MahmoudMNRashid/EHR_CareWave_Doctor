@@ -2,16 +2,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
 * {
   box-sizing: border-box;
 }
 
 html {
-  font-family: 'Noto Sans JP', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 .divgrid{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
   padding: 20px;
   gap: 15px 15px;
   place-items: center;
@@ -21,15 +24,18 @@ html {
 body {
   margin: 0;
   /* background-color: #3f3f3f; */
+
 }
 
   /* Chrome, Edge, and Safari */
   *::-webkit-scrollbar {
     width: 16px;
+    
   }
 
   *::-webkit-scrollbar-track {
-    background: rgb(64, 77, 109)
+    background: rgb(64, 77, 109);
+    border-radius: 10px;
     
   }
 
