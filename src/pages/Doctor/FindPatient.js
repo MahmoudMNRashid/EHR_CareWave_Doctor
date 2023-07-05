@@ -1,20 +1,22 @@
 import React from 'react'
-import { SearchForm } from '../../components/Doctor/SearchForm'
-import classes from '../../components/Doctor/SearchForm.module.css'
+
+import classes from '../Login_Logout_Error_SignUp/Login.module.css'
+
+import { FindPatientForm } from '../../components/Doctor/Section_SearchAboutPatient/FindPatient/FindPatientForm'
+import { Helmet } from 'react-helmet'
+
 export const FindPatient = () => {
     return (
+        <div className={`${classes.w_h} ${classes.center}`}>
+            <Helmet>
+<title>البحث عن مريض</title>
 
-        <div className={ classes.wrapper}>
-            <div className={classes.text}>
-                <p>
-                    Lorem ipsum odor amet, consectetuer adipiscing elit.
-                    Non diam platea netus cras pretium elementum congue quisque.
-                    Facilisis lorem sagittis neque lacinia; nec
-                    Facilisis lorem sagittis neque lacinia; nec
-                    Facilisis lorem sagittis neque lacinia; nec
-                </p>
-            </div>
-            <SearchForm />
+            </Helmet>
+            <FindPatientForm />
         </div>
+
+
+
+
     )
 }

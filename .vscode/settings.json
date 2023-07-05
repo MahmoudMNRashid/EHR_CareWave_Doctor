@@ -1,0 +1,34 @@
+{
+    "sqltools.connections": [
+        {
+            "mssqlOptions": {
+                "appName": "SQLTools",
+                "useUTC": true,
+                "encrypt": true
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 4340,
+            "driver": "MSSQL",
+            "name": "soso",
+            "database": "User",
+            "username": "sa",
+            "password": "Wesam@204"
+        },
+        {
+            "mssqlOptions": {
+                "appName": "SQLTools",
+                "useUTC": true,
+                "encrypt": true
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 4341,
+            "driver": "MSSQL",
+            "name": "sym",
+            "database": "Symptoms",
+            "username": "sa",
+            "password": "Wesam@204"
+        }
+    ]
+}

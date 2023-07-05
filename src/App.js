@@ -1,88 +1,157 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Login } from "./pages/Doctor/Login";
+import { Login } from "./pages/Login_Logout_Error_SignUp/Login";
 import { RootLayoutDoctor } from "./pages/Doctor/RootLayoutDoctor";
 import { FindPatient } from "./pages/Doctor/FindPatient";
-import { GeneralDetails } from "./pages/Doctor/GeneralDetails";
-import { DetailsDiagnose } from "./pages/Doctor/DetailsDiagnose";
-// import { LoginPage } from "./pages/Manager/LoginPage";
-// import { RootLayoutManager } from "./pages/Manager/RootLayoutManager";
-// import { NewAssistant } from "./pages/Manager/NewAssistant";
-// import { Complaints } from "./pages/Manager/Complaints";
-// import { MedicalTips } from "./pages/Manager/MedicalTips";
-// import { Reports } from "./pages/Manager/Reports";
-// import { DoctorSearchIdSyr } from "./pages/Manager/DoctorSearchIdSyr";
-// import { DoctorsSearchName } from "./pages/Manager/DoctorsSearchName";
-// import { AddTips } from "./pages/Manager/AddTips";
-// import { RootLayoutAsst } from "./pages/Asst_Manger/RootLayoutAsst";
-// import { VerifyDoctorAccount } from "./pages/Asst_Manger/VerifyDoctorAccount";
-// import {ChangeNumber} from './pages/Asst_Manger/ChangeNumber';
-// import { UpgradeAccount } from "./pages/Asst_Manger/UpgradeAccount";
-// import { DeleteAccountDoctor } from "./pages/Manager/DeleteAccountDoctor";
-
-
-
-// const router = createBrowserRouter([
-//   {
-//     path: '/', element: <LoginPage />
-//   },
-//   {
-//     path: '/dashboardSysAdmin',
-//     element: <RootLayoutManager />,
-//     children: [
-//       { path: 'NewAssistant', element: <NewAssistant /> },
-//       { path: 'Complaints', element: <Complaints /> },
-//       {
-//         path: 'MedicalTips', children: [
-
-//           { index:true, element: <MedicalTips />, }
-//           , { path: 'AddTips', element: <AddTips /> }]
-//       },
-//       { path: 'DeleteAccountDoctor', element: <DeleteAccountDoctor /> },
-//       { path: 'DoctorsSearchName', element: <DoctorsSearchName /> },
-//       { path: 'DoctorSearchIdSyr', element: <DoctorSearchIdSyr /> },
-//       { path: 'Reports', element: <Reports /> },
-//     ]
-//   },
-//   {
-//     path: '/dashboardAsst',
-//     element: <RootLayoutAsst />,
-//     children: [
-//       { path: 'VerifyDoctorAccount', element: <VerifyDoctorAccount/> },
-//       { path: 'UpgradeAccount', element: <UpgradeAccount/> },
-//       { path: 'ChangeNumber', element: <ChangeNumber /> },
-//     ]
-//   }
-// ])
+import { api, MainDetailsInformationEHR } from "./pages/Doctor/Main_Details_Information_EHR";
+import { apiDetailsDiagnose, DetailsDiagnose } from "./pages/Doctor/DetailsDiagnose";
+import { RootLayoutMLS } from "./pages/MLS/RootLayoutMLS";
+import { RootLayoutPharmacist } from "./pages/Pharmacist/RootLayoutPharmacist";
+import { RootLayoutRadioGraphers } from "./pages/RadioGraphers/RootLayoutRadioGraphers";
+import { action as logoutAction } from "./pages/Login_Logout_Error_SignUp/Logout";
+import { Error } from "./pages/Login_Logout_Error_SignUp/Error";
+import { PatientRegistration } from "./pages/Doctor/PatientRegistration";
+import { SignUpPage } from "./pages/Login_Logout_Error_SignUp/SignUpPage";
+import {  loaderForLogin, loaderForSaveRoutesWithExpForDoctor, loaderForSaveRoutesWithExpForMLS, loaderForSaveRoutesWithExpForPharmacist, loaderForSaveRoutesWithExpForRadioGrapher } from "./Util/Auth";
+import { DiagnosesOfPatient } from "./pages/RadioGraphers/DiagnosesOfPatient";
+import { apiGetMainDiagnoses, MainDiagnosesEHR } from "./pages/RadioGraphers/MainDiagnosesEHR";
+import { apiForGetDetailsForDiagnoseForRadioGraphers, DetailsDiagnoseForRadioGraphers } from "./pages/RadioGraphers/DetailsDiagnoseForRadioGraphers";
+import { apiForGetDetailsForDiagnoseForPharmacist, DetailsDiagnoseForPharmacist } from "./pages/Pharmacist/DetailsDiagnoseForPharmacist";
+import { apiForGetDetailsForDiagnoseForMLS, DetailsDiagnoseForMLS } from "./pages/MLS/DetailsDiagnoseForMLS";
 
 
 const router = createBrowserRouter([
 
   {
-    path: '/', element: <Login />
+    path: '/', element: <Login />, loader: loaderForLogin
   },
+
+
+
+  {
+    path: 'SignUp', element: <SignUpPage />
+
+  },
+
+
+
   {
     path: '/DashboardDoctor',
     element: <RootLayoutDoctor />,
+    errorElement: <Error />,
+    loader: loaderForSaveRoutesWithExpForDoctor,
     children: [
       {
-        path: 'Find_Patient', children: [
+        path: 'HealthRecord', loader: loaderForSaveRoutesWithExpForDoctor, children: [
           { index: true, element: <FindPatient /> },
           {
-            path: ':IdSyr', children: [
+            path: ':IdSyr', loader: loaderForSaveRoutesWithExpForDoctor, children: [
 
-              { index: true, element: <GeneralDetails /> },
-              { path: 'DetailsDiagnose', element: <DetailsDiagnose /> }
+              { index: true, element: <MainDetailsInformationEHR />, loader: api },
+              { path: ':IdDiagnose', element: <DetailsDiagnose />, loader: apiDetailsDiagnose }
             ]
           },
 
 
         ]
+      },
+      {
+        path: 'Patient_Registration', element: <PatientRegistration />, loader: loaderForSaveRoutesWithExpForDoctor
       }
     ]
   },
 
 
-])
+  {
+    path: '/DashboardRadioGraphers', element: <RootLayoutRadioGraphers />, loader: loaderForSaveRoutesWithExpForRadioGrapher, children: [
+      {
+        path: 'DiagnosesOfPatient', loader: loaderForSaveRoutesWithExpForRadioGrapher, children: [
+          { index: true, element: <DiagnosesOfPatient /> },
+          {
+            path: ':IdSyr', loader: loaderForSaveRoutesWithExpForRadioGrapher, children: [
+
+              { index: true, element: <MainDiagnosesEHR />, loader: apiGetMainDiagnoses },
+              { path: ':IdDiagnose', element: <DetailsDiagnoseForRadioGraphers />, loader: apiForGetDetailsForDiagnoseForRadioGraphers }
+            ]
+          },
+
+
+
+        ]
+      },
+      {
+        path: 'Patient_Registration', element: <PatientRegistration />, loader: loaderForSaveRoutesWithExpForRadioGrapher
+      }
+
+
+    ]
+  },
+
+
+
+  {
+    path: '/DashboardPharmacist', element: <RootLayoutPharmacist />, loader: loaderForSaveRoutesWithExpForPharmacist, children: [
+
+      {
+        path: 'DiagnosesOfPatient', loader: loaderForSaveRoutesWithExpForPharmacist, children: [
+          { index: true, element: <DiagnosesOfPatient /> },
+          {
+            path: ':IdSyr', loader: loaderForSaveRoutesWithExpForPharmacist, children: [
+
+              { index: true, element: <MainDiagnosesEHR />, loader: apiGetMainDiagnoses },
+              { path: ':IdDiagnose', element: <DetailsDiagnoseForPharmacist />, loader: apiForGetDetailsForDiagnoseForPharmacist }
+            ]
+          },
+
+
+
+        ]
+      },
+      {
+        path: 'Patient_Registration', element: <PatientRegistration />, loader: loaderForSaveRoutesWithExpForPharmacist
+      }
+
+    ]
+  },
+
+
+
+  {
+    path: '/DashboardMLS', element: <RootLayoutMLS />, loader: loaderForSaveRoutesWithExpForMLS, children: [
+
+      {
+        path: 'DiagnosesOfPatient', loader: loaderForSaveRoutesWithExpForMLS, children: [
+          { index: true, element: <DiagnosesOfPatient /> },
+          {
+            path: ':IdSyr', loader: loaderForSaveRoutesWithExpForMLS, children: [
+
+              { index: true, element: <MainDiagnosesEHR />, loader: apiGetMainDiagnoses },
+              { path: ':IdDiagnose', element: <DetailsDiagnoseForMLS />, loader: apiForGetDetailsForDiagnoseForMLS }
+            ]
+          },
+
+
+
+        ]
+      },
+      {
+        path: 'Patient_Registration', element: <PatientRegistration />, loader: loaderForSaveRoutesWithExpForMLS
+      }
+
+
+    ]
+  },
+
+
+
+  {
+    path: 'logout',
+    loader: logoutAction,
+  }
+
+
+]
+)
+
 function App() {
 
   return (

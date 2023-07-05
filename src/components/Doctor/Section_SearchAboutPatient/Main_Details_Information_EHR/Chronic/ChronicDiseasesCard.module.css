@@ -1,0 +1,89 @@
+.container {
+
+    border-radius: 15px;
+    padding: 10px;
+    background-color: #e6f2ff;
+    width: 250px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* _______________________  */
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title>div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+
+.title>div img {
+    width: 30px;
+}
+
+.title>div p {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.title button {
+    border-radius: 50%;
+
+    background-color: #e6f2ff;
+    color: #0480ff;
+    box-shadow: 5px 5px 15px 1px rgba(0, 0, 0, 0.2);
+    width: 24px;
+
+}
+
+
+
+/* ________________________ */
+
+.containerDiseases {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 111px;
+    overflow: auto auto;
+
+}
+
+.containerDiseases::-webkit-scrollbar {
+    display: none;
+}
+
+
+.diseases {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.diseases>div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.diseases>div img {
+    width: 24px;
+}
+
+.diseases>div p {
+    font-size: 12px;
+}
+
+.diseases button {
+    color: #0480ff;
+}

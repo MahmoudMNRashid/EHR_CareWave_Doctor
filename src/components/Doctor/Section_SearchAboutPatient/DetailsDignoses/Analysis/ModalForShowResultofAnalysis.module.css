@@ -1,0 +1,45 @@
+.wrapper {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    overflow: hidden;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 5px 5px 15px 1px rgba(0, 0, 0, 0.3);
+    gap: 20px;
+
+}
+
+
+.first {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.first img {
+    align-self: flex-start;
+    width: 32px;
+    color: #4f5e75;
+}
+
+.first p {
+    font-size: 14px;
+    color: #4f5e75;
+    height: 300px;
+    overflow: auto auto;
+}
+
+.first p::-webkit-scrollbar {
+    display: none;
+}
+
+.second {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4f5e75;
+    font-size: 18px;
+}
