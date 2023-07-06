@@ -1,0 +1,13 @@
+.w_h {
+   max-width: 100vw;
+    min-height: 100vh;
+    background: #d6d6d6;
+
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}

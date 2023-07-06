@@ -1,0 +1,145 @@
+.container {
+    width: 100%;
+    padding: 20px;
+    border-radius: 25px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    box-shadow: 5px 5px 15px 1px rgba(0, 0, 0, 0.2);
+
+}
+.up{
+
+    position: absolute;
+    width: 26px;
+    left:10px;
+    top: 50%
+}
+.down{
+
+    position: absolute;
+    width: 32px;
+    left:7px;
+    top: 60%;
+}
+/* ________________________________________ */
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title>div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.title>div img {
+    width: 35px;
+    background-color: #f1fff0;
+    box-shadow: 5px 5px 15px 1px rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.title>div p {
+    font-size: 17px;
+    font-weight: 600;
+    color: #4f5e75;
+
+}
+
+.title button {
+    border-radius: 50%;
+    padding: 5px 10px;
+    box-shadow: 5px 5px 15px 1px rgba(0, 0, 0, 0.1);
+    color:#4f5e75 ;
+
+}
+
+/* __________________________________*/
+
+.containerInfo {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 15px;
+    height: 160px;
+    overflow: auto auto;
+
+
+}
+.containerInfo::-webkit-scrollbar{
+    display: none;
+}
+
+.info {
+    display: flex;
+    /* justify-content: center; */
+    flex-direction: column;
+    align-items: flex-start;
+    /* gap: 15px; */
+    background-color: #f1fff0;
+    border-radius: 12px;
+    padding: 10px;
+    width: 200px;
+    height: 150px;
+}
+
+.info>div:nth-child(1){
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+.info>div:nth-child(1) > div  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+}
+
+.info>div img {
+    width: 26px;
+}
+
+.info>div p {
+    font-size: 12px;
+}
+
+.info>p {
+    align-self: center;
+    margin: auto;
+    font-size: 14px;
+    color: #4f5e75;
+    font-weight: 600;
+}
+
+.after{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-self: center;
+    margin: auto;
+    font-size: 14px;
+    color: #4f5e75;
+    transform: translateY(-10px);
+    font-weight: 600;
+
+}
+.info .containerButtons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    align-self: center;
+    color: #4f5e75;
+}
