@@ -8,9 +8,10 @@ import { useState } from 'react';
 import { MainInput } from '../../../../Ui/MainInput'
 import { getToken } from '../../../../../Util/Auth';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import LoadingBar from 'react-top-loading-bar';
 const ModalAdd = (props) => {
+    const { IdSyr, IdDiagnose } = useParams()
     const [inputs, setInputs] = useState(['']);
     const [touchedInputs, setTouchedInputs] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +48,7 @@ const ModalAdd = (props) => {
             return;
         }
         const info = {
-            symptomId: props.info.idDiagnose,
+            symptomId: IdDiagnose,
             nameDrug: inputs
         }
         try {
@@ -77,7 +78,7 @@ const ModalAdd = (props) => {
                     progress: undefined,
                     theme: "light",
                 })
-                nav(`/DashboardDoctor/HealthRecord/${props.info.idSyr}/${props.info.fullPath}`, { replace: true });
+                nav(`/DashboardDoctor/HealthRecord/${IdSyr}/${IdDiagnose}`, { replace: true });
 
 
             }
@@ -95,7 +96,7 @@ const ModalAdd = (props) => {
                     theme: "light",
                 });
 
-            }else{
+            } else {
                 toast.error('!حدث خطأ ما', {
                     position: "top-right",
                     autoClose: 1000,

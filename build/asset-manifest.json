@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.0ac5afe0.css",
-    "main.js": "/static/js/main.3d45285b.js",
+    "main.css": "/static/css/main.4407a909.css",
+    "main.js": "/static/js/main.d9c52bce.js",
     "static/media/illustration.jpg": "/static/media/illustration.aa3a7480b04e30ce01ae.jpg",
     "static/media/ehr.jpg": "/static/media/ehr.6862ba706e3b5f72179b.jpg",
     "static/media/uicons-regular-rounded-QXG46O7V.eot": "/static/media/uicons-regular-rounded-QXG46O7V.7f3cbccd6c1dad5b5c3d.eot",
@@ -43,6 +43,7 @@
     "static/media/runny-nose.png": "/static/media/runny-nose.c3274e94185b5ee4fe3e.png",
     "static/media/data-privacy.png": "/static/media/data-privacy.892454449718230e1b9a.png",
     "static/media/medical-report.png": "/static/media/medical-report.29f312f7dfa2b4a2fa59.png",
+    "static/media/edit-info.png": "/static/media/edit-info.0c74e61ae2cb2e04fe32.png",
     "static/media/hypoallergenic.png": "/static/media/hypoallergenic.5165b8d53c87ce85ad21.png",
     "static/media/blood-type.png": "/static/media/blood-type.02cddef5049a05971c0e.png",
     "static/media/bacteria.png": "/static/media/bacteria.4773032cd4d294bdee93.png",
@@ -58,14 +59,15 @@
     "static/media/job-description.png": "/static/media/job-description.db3ab460da0cce60dc81.png",
     "static/media/dna-test.png": "/static/media/dna-test.b9209398adc91dab217c.png",
     "static/media/calendar.png": "/static/media/calendar.13243d76b15dd36c0385.png",
+    "static/media/delete-file.png": "/static/media/delete-file.cc0b111306ff4381ee48.png",
     "static/media/surgery (1).png": "/static/media/surgery (1).afefa9ad70eaf7d98dc6.png",
     "static/media/real-state.png": "/static/media/real-state.7dbb58faf2b6a3af9ed8.png",
     "index.html": "/index.html",
-    "main.0ac5afe0.css.map": "/static/css/main.0ac5afe0.css.map",
-    "main.3d45285b.js.map": "/static/js/main.3d45285b.js.map"
+    "main.4407a909.css.map": "/static/css/main.4407a909.css.map",
+    "main.d9c52bce.js.map": "/static/js/main.d9c52bce.js.map"
   },
   "entrypoints": [
-    "static/css/main.0ac5afe0.css",
-    "static/js/main.3d45285b.js"
+    "static/css/main.4407a909.css",
+    "static/js/main.d9c52bce.js"
   ]
 }

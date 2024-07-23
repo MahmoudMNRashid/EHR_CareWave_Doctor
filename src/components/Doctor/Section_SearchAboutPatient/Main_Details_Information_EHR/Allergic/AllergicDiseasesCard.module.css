@@ -8,8 +8,23 @@
     display: flex;
     flex-direction: column;
     gap: 30px;
+    position: relative;
 }
+.up{
+    position: absolute;
+    width: 26px;
+    left: 8px;
+    bottom: 45%;
+    
+}
+.down{
 
+    position: absolute;
+    width: 32px;
+    left: 5px;
+    top: 60%;
+
+}
 /* _______________________  */
 .title {
     display: flex;
@@ -54,6 +69,7 @@
     gap: 5px;
     height: 111px;
     overflow: auto auto;
+    width: 200px;
    
 
 }

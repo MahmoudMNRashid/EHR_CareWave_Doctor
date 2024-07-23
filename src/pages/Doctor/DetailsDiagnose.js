@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import classes from './DetailsDiagnose.module.css'
 import { getToken, loaderForSaveRoutesWithExpForDoctor } from '../../Util/Auth'
-import { redirect, useLoaderData } from 'react-router-dom'
+import { redirect, useLoaderData, useLocation, useParams } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import { MainDetailsDiagnoseCard } from '../../components/Doctor/Section_SearchAboutPatient/DetailsDignoses/MainDetailsDiagnose/MainDetailsDiagnoseCard'
 import { AnalysisCard } from '../../components/Doctor/Section_SearchAboutPatient/DetailsDignoses/Analysis/AnalysisCard'
@@ -13,37 +13,52 @@ import { Helmet } from 'react-helmet'
 
 export const DetailsDiagnose = () => {
 
- 
-  const bigData = useLoaderData()
 
+ 
+  
+
+  const { IdSyr, IdDiagnose } = useParams()
+
+  //_____________________________________________
+  const bigData = useLoaderData()
+  console.log(bigData)
 
   // _____________________________________________________________
-
+  var apiDate = new Date(bigData.extra.dateRequest); // Assuming the date is in UTC
+  var timeZoneOffset = new Date().getTimezoneOffset() / -60; // Convert to hours and negate
+  var offsetHours = timeZoneOffset;
+  var adjustedDate = new Date(apiDate.getTime() + offsetHours * 60 * 60 * 1000);
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  const formattedAdjustedDate = adjustedDate.toLocaleDateString("ar", options);
+  const hours = adjustedDate.getHours();
+  const minutes = adjustedDate.getMinutes();
+  const d = `${hours}:${minutes}   ${formattedAdjustedDate}`
+  
   const GeneralDetailsDiagnose = {
-    name: `${bigData.nameOfDieses}`,
-    date: `${bigData.date}`,
-    desc: `${bigData.desc}`
+    name: bigData.extra.nameDisease,
+    date: d,
+    desc: bigData.extra.description,
+    extra:bigData.extra,
+    idSyrDoctor:bigData.idSyrDocotor
+
   }
 
 
   // ________________________________________________________________
   const InformationAnalysis = {
-    isHasPermission: bigData.isHasPermission,
-    idSyr: bigData.idSyr,
-    idDiagnose: bigData.idDiagnose,
-    fullPath: bigData.fullPath,
-    analysis: bigData.data.data.analysis
+    extra: bigData.extra,
+    idSyr: IdSyr,
+    idDiagnose: IdDiagnose,
+    analysis: bigData.data.data.analysis,
 
 
   }
   //_______________________________________________________________
   const InformationXray = {
-    isHasPermission: bigData.isHasPermission,
-    idSyr: bigData.idSyr,
-    idDiagnose: bigData.idDiagnose,
-    fullPath: bigData.fullPath,
-    xrays: bigData.data.data.x_ray
-
+    extra: bigData.extra,
+    idSyr: IdSyr,
+    idDiagnose: IdDiagnose,
+    xrays: bigData.data.data.x_ray,
 
 
 
@@ -51,20 +66,18 @@ export const DetailsDiagnose = () => {
   }
   //_________________________________________
   const InformationDrugs = {
-    isHasPermission: bigData.isHasPermission,
-    idSyr: bigData.idSyr,
-    idDiagnose: bigData.idDiagnose,
-    fullPath: bigData.fullPath,
-    drugs: bigData.data.data.durg
+    extra: bigData.extra,
+    idSyr: IdSyr,
+    idDiagnose: IdDiagnose,
+    drugs: bigData.data.data.durg,
 
   }
   // ________________________________________
   const InformationSurgery = {
-    isHasPermission: bigData.isHasPermission,
-    idSyr: bigData.idSyr,
-    idDiagnose: bigData.idDiagnose,
-    fullPath: bigData.fullPath,
-    surgery: bigData.data.data.surgery
+    extra: bigData.extra,
+    idSyr: IdSyr,
+    idDiagnose: IdDiagnose,
+    surgery: bigData.data.data.surgery,
 
 
   }
@@ -77,6 +90,7 @@ export const DetailsDiagnose = () => {
       <Helmet><title> تفاصيل التشخيص</title></Helmet>
       <div className={classes.Bigwrapper}>
         <div className={classes.FirstWrapper}>
+
           <MainDetailsDiagnoseCard info={GeneralDetailsDiagnose} />
         </div>
         <div className={classes.MiddleWrapper}>
@@ -86,7 +100,7 @@ export const DetailsDiagnose = () => {
           <SurgeryCard info={InformationSurgery} />
         </div>
 
-        
+
 
       </div>
       <ToastContainer />
@@ -96,18 +110,25 @@ export const DetailsDiagnose = () => {
 
 export const apiDetailsDiagnose = async ({ params }) => {
   loaderForSaveRoutesWithExpForDoctor()
-  const param = params.IdDiagnose;
-  const values = param.split("+");
-
-  // Storing values in variables
-  const idDiagnose = values[0];
-  const isHasPermission = values[1];
-  const nameOfDieses = values[2];
-  const date = values[3];
-  const desc = values[4]
-
   try {
-    const response = await fetch(`http://localhost:8001/v1/Symptoms/getSymptoms/Details/${idDiagnose}`, {
+
+    const responseConfirm = await fetch(`http://localhost:8000/v1/HelpMedical/getinfosick/${params.IdSyr}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `bearer ${getToken()}`
+
+      },
+    })
+
+    if (!responseConfirm.ok) {
+      const data = await responseConfirm.json()
+      throw data
+    }
+
+
+
+
+    const response = await fetch(`http://localhost:8001/v1/Symptoms/getSymptoms/Details/${params.IdDiagnose}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `bearer ${getToken()}`
@@ -118,23 +139,78 @@ export const apiDetailsDiagnose = async ({ params }) => {
       console.log('error from loader details dignoses')
       throw new Error('error')
     }
-    const data = await response.json()
+    const iditosResponse = await fetch(`http://localhost:8001/v1/Symptoms/getSymptoms/${params.IdSyr}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `bearer ${getToken()}`
 
-
-    const bigData = {
-      idDiagnose,
-      idSyr: params.IdSyr,
-      isHasPermission,
-      nameOfDieses,
-      fullPath: params.IdDiagnose,
-      desc,
-      date,
-      data
+      },
+    })
+    if (!iditosResponse.ok) {
+      throw new Error('error')
     }
+    const iditosdata = await iditosResponse.json()
+
+
+    const result = iditosdata.data.data.find(item => item.symptomsid === +params.IdDiagnose)
+    if (!result) {
+      throw new Error('error')
+    }
+let idSyrDocotor =''
+      try {
+  
+        const response = await fetch(`http://localhost:8000/v1/User/get-doctors/byid/${result.doctorId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${getToken()} `
+  
+          },
+  
+        });
+        if (!response.ok) {
+          const data = await response.json()
+          throw data;
+        }
+        const data = await response.json()
+  
+         idSyrDocotor= data.data.result.length === 0 ? '' : data.data.result[0].syrid
+  
+      } catch (error) {
+        toast.error('!حدث خطأ ما', {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+  
+    
+  
+
+
+
+    const data = await response.json()
+    const bigData = { data, extra: result,idSyrDocotor }
 
     return bigData
   } catch (error) {
-    toast.error('حدث خطأ ما')
+    if (error.message === `Can't found account.`) {
+
+      throw new Error('الرقم الوطني غير موجود')
+    }
+    toast.error('حدث خطأ ما',
+      {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      })
     return redirect(`/DashboardDoctor/HealthRecord/${params.IdSyr}`)
   }
 

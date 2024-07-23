@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import classes from './VaccinesDiseasesCard.module.css'
 import vaccine from '../../../../../style/MainDiseases/vaccine.png'
 import disease from '../../../../../style/MainDiseases/syringe-outline.png'
 import date from '../../../../../style/MainDiseases/calendar.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAdd, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faAdd, faAngleDown, faAngleUp, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { ModalForAddVaccineOrDiseases } from '../Modals/ModalForAddVaccineOrDiseases'
 import { ModalForEditVaccineOrDiseases } from '../Modals/ModalForEditVaccineOrDiseases'
 export const VaccinesDiseasesCard = (props) => {
@@ -26,19 +26,39 @@ export const VaccinesDiseasesCard = (props) => {
   }
   // ___________________________________
   const [information, setinformation] = useState({})
-  const handleToSendInformationToModal = (desc, id) => {
+  const handleToSendInformationToModal = (desc, id,date) => {
     setinformation({
       desc,
       id,
       idPatient: props.info.idPatient,
-      idSyr: props.info.idSyr
+      idSyr: props.info.idSyr,date
 
     })
     handleOpenmodalEditVaccineOrDiseases()
   }
+
+
+  const divRef = useRef(null);
+
+  const handleScrollDown = () => {
+    divRef.current.scrollTo({
+      top: divRef.current.scrollTop + 100,
+      behavior: 'smooth',
+    });
+  };
+
+  const handleScrollUp = () => {
+    divRef.current.scrollTo({
+      top: divRef.current.scrollTop - 100,
+      behavior: 'smooth',
+    });
+  };
+
   return (
     <>
       <div className={classes.container}>
+        {props.info.vaccines.length > 4 && <button onClick={handleScrollUp} className={classes.up}><FontAwesomeIcon color={'SeaGreen'} icon={faAngleUp} /> </button>}
+        {props.info.vaccines.length > 4 && <button onClick={handleScrollDown} className={classes.down}><FontAwesomeIcon color={'SeaGreen'} icon={faAngleDown} /> </button>}
         <div className={classes.title}>
           <div>
             <img src={vaccine} alt='dna' />
@@ -47,7 +67,7 @@ export const VaccinesDiseasesCard = (props) => {
 
           <button onClick={handleOpenmodalAddVaccineOrDiseases}> <FontAwesomeIcon icon={faAdd} />   </button>
         </div>
-        <div className={classes.containerDiseases}>
+        <div ref={divRef} className={classes.containerDiseases}>
 
 
           {props.info.vaccines.length ? (props.info.vaccines.map((item) => {
@@ -70,7 +90,7 @@ export const VaccinesDiseasesCard = (props) => {
 
 
                 <button onClick={() => {
-                  handleToSendInformationToModal(item.name, item.id)
+                  handleToSendInformationToModal(item.name, item.id,formattedDate)
                 }}> <FontAwesomeIcon icon={faEdit} />   </button>
 
               </div>

@@ -32,6 +32,9 @@ export const loaderForLogin = _ => {
         if (getRole() === 'pharmaceutical') {
             return redirect('/DashboardPharmacist')
         }
+        else{
+            return null
+        }
     }
     else {
         return null

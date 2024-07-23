@@ -6,7 +6,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 export const MainInput = (props) => {
   const [showPassword, setShowPassword] = useState(false);
   const inputType = props.configuration.type === 'password' && !showPassword
-    ? 'password'
+    ? 'text'
     : props.configuration.type;
   const inputClasses = `${classes.input} ${props.in ? classes.hasValueInput : ''}`;
   const labelClasses = `${classes.userlabel} ${props.la ? classes.hasValue : ''}`;
@@ -16,15 +16,16 @@ export const MainInput = (props) => {
   return (
     <div className={classes.inputgroup}>
       <input
-      style={props.style}
+        style={props.style}
         required
-        type={inputType} className={`${inputClasses} } ${props.isInvalid ? classes.invalid : ''}`
+        type={inputType} className={` ${inputClasses}  ${props.isInvalid ? classes.invalid : ''}`
+
         }
         onBlur={props.onBlur}
         onChange={props.onChange}
         value={props.value}
-        maxLength={11}
-        
+        min={0}
+
       />
       {props.configuration.type === 'password' && (
         <button
@@ -38,7 +39,7 @@ export const MainInput = (props) => {
           />
         </button>
       )}
-      <label className={labelClasses}>{props.configuration.label}</label>
+      <label className={`${props.configuration.type === 'date' ? classes.a : ''} ${labelClasses}`}>{props.configuration.label}</label>
     </div>
   )
 }

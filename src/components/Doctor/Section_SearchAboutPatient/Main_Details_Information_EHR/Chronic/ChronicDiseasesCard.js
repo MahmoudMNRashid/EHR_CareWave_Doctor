@@ -1,21 +1,19 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import classes from './ChronicDiseasesCard.module.css'
 import heart from '../../../../../style/MainDiseases/heart.png'
 import disease from '../../../../../style/MainDiseases/bacteria.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAdd, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faAdd, faAngleDown, faAngleUp, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { ModalForAddVaccineOrDiseases } from '../Modals/ModalForAddVaccineOrDiseases'
 import { ModalForEditVaccineOrDiseases } from '../Modals/ModalForEditVaccineOrDiseases'
 export const ChronicDiseasesCard = (props) => {
 
   // ________________________________
   const [modalAddVaccineOrDiseasesIsOpen, setmodalAddVaccineOrDiseasesIsOpen] = useState(false)
-  const handleClosemodalAddVaccineOrDiseases = () => {
-    setmodalAddVaccineOrDiseasesIsOpen(false)
-  }
-  const handleOpenmodalAddVaccineOrDiseases = () => {
-    setmodalAddVaccineOrDiseasesIsOpen(true)
-  }
+  const handleClosemodalAddVaccineOrDiseases = _ =>  setmodalAddVaccineOrDiseasesIsOpen(false)
+  
+  const handleOpenmodalAddVaccineOrDiseases = _ => setmodalAddVaccineOrDiseasesIsOpen(true)
+  
   // _________________________________
   const [modalEditVaccineOrDiseasesIsOpen, setmodalEditVaccineOrDiseasesIsOpen] = useState(false)
   const handleClosemodalEditVaccineOrDiseases = () => {
@@ -36,12 +34,26 @@ setinformation({
 })
 handleOpenmodalEditVaccineOrDiseases()
 }
+const divRef = useRef(null);
+const handleScrollDown = () => {
+  divRef.current.scrollTo({
+    top: divRef.current.scrollTop + 100,
+    behavior: 'smooth',
+  });
+};
 
-
+const handleScrollUp = () => {
+  divRef.current.scrollTo({
+    top: divRef.current.scrollTop - 100,
+    behavior: 'smooth',
+  });
+};
 
   return (
     <>
       <div className={classes.container}>
+      {props.info.diseases.length  > 4 && <button onClick={handleScrollUp} className={classes.up}><FontAwesomeIcon color={'#0480ff'} icon={faAngleUp} /> </button>}
+        {props.info.diseases.length  > 4 && <button onClick={handleScrollDown} className={classes.down}><FontAwesomeIcon color={'#0480ff'} icon={faAngleDown} /> </button>}
         <div className={classes.title}>
           <div>
             <img src={heart} alt='dna' />
@@ -50,7 +62,7 @@ handleOpenmodalEditVaccineOrDiseases()
 
           <button onClick={handleOpenmodalAddVaccineOrDiseases}> <FontAwesomeIcon icon={faAdd} />   </button>
         </div>
-        <div className={classes.containerDiseases}>
+        <div ref={divRef} className={classes.containerDiseases}>
 
 
 

@@ -62,106 +62,107 @@ export const LoginForm = () => {
         }
 
         // console.log(enteredPassword)
-        try {
-            const response = await fetch('http://localhost:8000/v1/User/login/any', {
-                method: 'POST',
-                body: JSON.stringify(info),
-                headers: {
-                    'Content-Type': 'application/json',
+        // try {
+        //     const response = await fetch('http://localhost:8000/v1/User/login/any', {
+        //         method: 'POST',
+        //         body: JSON.stringify(info),
+        //         headers: {
+        //             'Content-Type': 'application/json',
 
 
-                },
-            });
-            if (!response.ok) {
-                const data = await response.json()
-                throw data;
-            }
-            const data = await response.json()
+        //         },
+        //     });
+        //     if (!response.ok) {
+        //         const data = await response.json()
+        //         throw data;
+        //     }
+        //     const data = await response.json()
 
-            const token = data.data.token;
-            localStorage.setItem('token', token);
+        //     const token = data.data.token;
+        //     localStorage.setItem('token', token);
 
-            const expiration = new Date(data.data.expire)
-            const milliseconds = expiration.getTime();
-            localStorage.setItem('expiration', milliseconds.toString());
+        //     const expiration = new Date(data.data.expire)
+        //     const milliseconds = expiration.getTime();
+        //     localStorage.setItem('expiration', milliseconds.toString());
+        //     localStorage.setItem('idSyr',enteredidSyr)
 
-            const role = data.data.role
-            console.log(role)
-            if (role === "doctor") {
-                localStorage.setItem('role', "doctor")
-            }
-            else if (role === "radiographer") {
-                localStorage.setItem('role', "radiographer")
-            } else if (role === "analyzer") {
-                localStorage.setItem('role', "analyzer")
-            } else if (role === "pharmaceutical") {
-                localStorage.setItem('role', "pharmaceutical")
-            }
-            else {
-                localStorage.setItem('role', '_')
-            }
-
-
-
-
-
-
-            if (role === "doctor" && token) {
-                nav('/DashboardDoctor',{replace:true})
-            } else if (role === "radiographer" && token) {
-                nav('/DashboardRadioGraphers',{replace:true})
-            } else if (role === "analyzer" && token) {
-                nav('/DashboardMLS')
-            } else if (role === "pharmaceutical" && token) {
-                nav('/DashboardPharmacist',{replace:true})
-            }
-            else {
-                throw new Error('forbidden')
-            }
+        //     const role = data.data.role
+        //     console.log(role)
+        //     if (role === "doctor") {
+        //         localStorage.setItem('role', "doctor")
+        //     }
+        //     else if (role === "radiographer") {
+        //         localStorage.setItem('role', "radiographer")
+        //     } else if (role === "analyzer") {
+        //         localStorage.setItem('role', "analyzer")
+        //     } else if (role === "pharmaceutical") {
+        //         localStorage.setItem('role', "pharmaceutical")
+        //     }
+        //     else {
+        //         localStorage.setItem('role', '_')
+        //     }
 
 
 
 
 
-        } catch (error) {
 
-            if (error.message === 'identify or password is uncorrect') {
-                toast.warn('!خطأ في الرقم الوطني او كلمة المرور', {
-                    position: "top-right",
-                    autoClose: 1000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
+        //     if (role === "doctor" && token) {
+        //         nav('/DashboardDoctor',{replace:true})
+        //     } else if (role === "radiographer" && token) {
+        //         nav('/DashboardRadioGraphers',{replace:true})
+        //     } else if (role === "analyzer" && token) {
+        //         nav('/DashboardMLS')
+        //     } else if (role === "pharmaceutical" && token) {
+        //         nav('/DashboardPharmacist',{replace:true})
+        //     }
+        //     else {
+        //         throw new Error('forbidden')
+        //     }
 
-            } else if (error === "forbidden") {
-                toast.error('!ممنوع الدخول  ', {
-                    position: "top-right",
-                    autoClose: 1000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
+
+
+
+
+        // } catch (error) {
+
+        //     if (error.message === 'identify or password is uncorrect') {
+        //         toast.warn('!خطأ في الرقم الوطني او كلمة المرور', {
+        //             position: "top-right",
+        //             autoClose: 1000,
+        //             hideProgressBar: false,
+        //             closeOnClick: true,
+        //             draggable: true,
+        //             progress: undefined,
+        //             theme: "light",
+        //         });
+
+        //     } else if (error === "forbidden") {
+        //         toast.error('!ممنوع الدخول  ', {
+        //             position: "top-right",
+        //             autoClose: 1000,
+        //             hideProgressBar: false,
+        //             closeOnClick: true,
                   
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-            } else {
-                toast.error('!حدث خطأ ما', {
-                    position: "top-right",
-                    autoClose: 1000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
+        //             draggable: true,
+        //             progress: undefined,
+        //             theme: "light",
+        //         });
+        //     } else {
+        //         toast.error('!حدث خطأ ما', {
+        //             position: "top-right",
+        //             autoClose: 1000,
+        //             hideProgressBar: false,
+        //             closeOnClick: true,
                    
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-            }
+        //             draggable: true,
+        //             progress: undefined,
+        //             theme: "light",
+        //         });
+        //     }
 
-        }
-
+        // }
+        nav('/DashboardDoctor',{replace:true})
         setIsLoading(false);
         setEnteredidSyr('');
         setEnteredidSyrTouched(false);

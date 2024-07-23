@@ -3,10 +3,12 @@ import classes from './FindPatientForm.module.css'
 import { MainInput } from '../../../Ui/MainInput'
 import LoadingBar from 'react-top-loading-bar';
 import ehr from '../../../../style/SearchPatient/ehr.jpg'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { getRole, getToken } from '../../../../Util/Auth';
 export const FindPatientForm = () => {
+
+
     const [enteredName, setEnteredName] = useState('');
     const [enteredNameTouched, setEnteredNameTouched] = useState(false);
     const nav = useNavigate()
@@ -36,40 +38,42 @@ export const FindPatientForm = () => {
         setEnteredNameTouched(true)
         setIsLoading(true)
 
-      if(getRole()==='doctor'){
-        try {
-            const response = await fetch(`http://localhost:8000/v1/HelpMedical/getinfosick/${enteredName}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `bearer ${getToken()}`
+        if (getRole() === 'doctor') {
+            try {
+                const response = await fetch(`http://localhost:8000/v1/HelpMedical/getinfosick/${enteredName}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `bearer ${getToken()}`
 
-                },
-            })
+                    },
+                })
 
-            if (!response.ok) {
-                const data = await response.json()
-                throw data
+                if (!response.ok) {
+                    const data = await response.json()
+                    throw data
+                }
+
+                nav(`/DashboardDoctor/HealthRecord/${enteredName}`, { replace: true })
+            } catch (error) {
+                if (error.message === `Can't found account.`) {
+                    toast.warning('الرقم الوطني غير موجود')
+                }else{
+                    toast.error('حدث خطأ ما!')
+                }
+
             }
 
-            nav(`/DashboardDoctor/HealthRecord/${enteredName}`)
-        } catch (error) {
-            if (error.message === `Can't found account.`) {
-                toast.warning('الرقم الوطني غير موجود')
-            }
-
-        }
-
-        setIsLoading(false)
-        setEnteredNameTouched(false)
-      }else if (getRole()==='radiographer'){
+            setIsLoading(false)
+            setEnteredNameTouched(false)
+        } else if (getRole() === 'radiographer') {
             nav(`/DashboardRadioGraphers/DiagnosesOfPatient/${enteredName}`)
-      } else if (getRole()==='pharmaceutical'){
-        nav(`/DashboardPharmacist/DiagnosesOfPatient/${enteredName}`)
-      }else if(getRole()==='analyzer'){
-        nav(`/DashboardMLS/DiagnosesOfPatient/${enteredName}`)
-      }else{
-        nav(`/DashboardMLS`)
-      }
+        } else if (getRole() === 'pharmaceutical') {
+            nav(`/DashboardPharmacist/DiagnosesOfPatient/${enteredName}`)
+        } else if (getRole() === 'analyzer') {
+            nav(`/DashboardMLS/DiagnosesOfPatient/${enteredName}`)
+        } else {
+            nav(`/DashboardMLS`)
+        }
 
     };
 
@@ -100,7 +104,7 @@ export const FindPatientForm = () => {
                                 <p className={`error-text ${classes.a}`}>{'الرقم أقل أو أكثر من 11 خانة.'}</p>
                             )}
                         </div>
-                        <button  disabled={!formIsValid} onClick={formSubmissionHandler}> ابحث</button>
+                        <button disabled={!formIsValid} onClick={formSubmissionHandler}> ابحث</button>
                     </div>
 
 

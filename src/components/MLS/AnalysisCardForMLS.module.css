@@ -9,19 +9,20 @@
     position: relative;
     box-shadow: 5px 5px 15px 1px rgba(0, 0, 0, 0.2);
 margin: 0px 60px;
+position: relative;
 }
 .up{
 
     position: absolute;
     width: 26px;
-    left:10px;
+    left:0px;
     top: 50%
 }
 .down{
 
     position: absolute;
     width: 32px;
-    left:7px;
+    left:-3px;
     top: 60%;
 }
 /* ________________________________________ */

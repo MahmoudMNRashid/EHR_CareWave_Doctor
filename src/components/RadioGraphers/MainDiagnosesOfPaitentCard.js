@@ -9,6 +9,7 @@ import details from '../../style/MainInfoDiagnoses/file.png'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getRole } from '../../Util/Auth'
 export const MainDiagnosesOfPaitentCard = (props) => {
+  console.log(props)
   const nav = useNavigate()
   const { IdSyr } = useParams()
   console.log(IdSyr)
@@ -29,13 +30,13 @@ export const MainDiagnosesOfPaitentCard = (props) => {
 
         {props.info.length ? (props.info.map((item) => {
           const options = { year: "numeric", month: "long", day: "numeric" };
-          const formattedDate = new Date(item.date).toLocaleDateString("en-US", options);
+          const formattedDate = new Date(item.dateRequest).toLocaleDateString("en-US", options);
           return (
             <div key={item.symptomsid} className={classes.diagnose}>
               <div className={classes.info}>
                 <div className={classes.a}>
                   <img src={virus} alt='' />
-                  <p>{item.nameDisease}</p>
+                  <p>{item.nameDisease?item.nameDisease:'لم تظهر النتيجة بعد'}</p>
                 </div>
 
                 <button onClick={() => {
@@ -65,7 +66,7 @@ export const MainDiagnosesOfPaitentCard = (props) => {
               </div>
               <div className={classes.info}>
                 <img src={desc} alt='description' />
-                <p>{item.description}</p>
+                <p>{item.description?item.description:'لم تظهر النتيجة بعد'}</p>
               </div>
 
 

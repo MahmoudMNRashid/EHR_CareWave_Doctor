@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import classes from './SignUpForm.module.css'
 import { useNavigate } from 'react-router-dom'
 import { MainInput } from '../Ui/MainInput'
@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import LoadingBar from 'react-top-loading-bar'
 import Upload from '../../style/Rigester/upload.png'
 import registration from '../../style/Rigester/registration.png'
+import { getToken } from '../../Util/Auth'
 export const SignUpForm = () => {
     const pattern = /^09[3-9]\d{7}$/;
     function containsSpecialCharacters(str) {
@@ -39,6 +40,7 @@ export const SignUpForm = () => {
     const [enteredSelectedType, setSelectedType] = useState('الفئة الطبية');
     const [enteredSelectedTypeTouched, setEnteredelectedTypeTouched] = useState(false);
 
+
     const [enteredSelectedGender, setSelectedGender] = useState('الجنس');
     const [enteredSelectedGenderTouched, setEnteredelectedGenderTouched] = useState(false);
 
@@ -47,6 +49,14 @@ export const SignUpForm = () => {
 
     const [enteredSelectedBloodType, setSelectedBloodType] = useState('زمرة الدم');
     const [enteredSelectedBloodTypeTouched, setEnteredelectedBloodTypeTouched] = useState(false);
+
+
+    const [suggestions, setSuggestions] = useState([]);
+    const [selectedSpecialization, setSelectedSpecialization] = useState({
+      id: '',
+      name: '',
+    });
+
 
     const [isLoading, setIsLoading] = useState(false);
     const nav = useNavigate()
@@ -71,7 +81,7 @@ export const SignUpForm = () => {
     const enteredBirthDayIsValid = enteredBirthDay !== '';
     const BirthDayInputIsInvalid = !enteredBirthDayIsValid && enteredBirthDayTouched;
 
-    const enteredSpecializationIsValid = (enteredSelectedType === 'doctor' && enteredSpecialization !== '') || ((enteredSelectedType === 'radiographer' || enteredSelectedType === 'analyzer' || enteredSelectedType === 'pharmaceutical') && enteredSpecialization === '');
+    const enteredSpecializationIsValid = (enteredSelectedType === 'doctor' && selectedSpecialization.name !=='') || ((enteredSelectedType === 'radiographer' || enteredSelectedType === 'analyzer' || enteredSelectedType === 'pharmaceutical') && enteredSpecialization === '');
     const SpecializationInputIsInvalid = !enteredSpecializationIsValid && enteredSpecializationTouched;
 
     const enteredSelectedGenderlIsValid = enteredSelectedGender !== 'الجنس';
@@ -82,9 +92,9 @@ export const SignUpForm = () => {
 
     const enteredSelectedBloodTypelIsValid = enteredSelectedBloodType !== 'زمرة الدم';
     const SelectedBloodTypeInputIsInvalid = !enteredSelectedBloodTypelIsValid && enteredSelectedBloodTypeTouched;
-
-    const enteredSelectedTypelIsValid = enteredSelectedType !== 'الفئة الطبية';
+    const enteredSelectedTypelIsValid = enteredSelectedType !== 'الفئةالطبية';
     const SelectedTypeInputIsInvalid = !enteredSelectedTypelIsValid && enteredSelectedTypeTouched;
+
 
     const [selectedidSyrFront, setSelectedidSyrFront] = useState('');
     const [selectedidSyrBack, setSelectedidSyrBack] = useState('');
@@ -92,9 +102,9 @@ export const SignUpForm = () => {
 
     const handleidSyrFrontChange = (event) => {
         const file = event.target.files[0];
-        console.log(file)
         setSelectedidSyrFront(file);
     };
+
     const handleidSyrBackChange = (event) => {
         const file = event.target.files[0];
         console.log(file)
@@ -106,7 +116,7 @@ export const SignUpForm = () => {
         setSelectedidMed(file);
     };
 
-
+  
 
 
     let formIsValid = false;
@@ -226,7 +236,7 @@ export const SignUpForm = () => {
         setEnteredelectedGenderTouched(true)
         setEnteredelectedGovernorateTouched(true)
         setEnteredelectedTypeTouched(true)
-        
+
 
         if (!enteredidSyrIsValid ||
             !enteredPasswordIsValid ||
@@ -246,7 +256,7 @@ export const SignUpForm = () => {
         ) {
             return;
         }
-        const specializ = enteredSelectedType === "doctor" ? enteredSpecialization : "_"
+        const specializ = enteredSelectedType === "doctor" ? selectedSpecialization.name : "_"
         const role = enteredSelectedType === 'doctor' ? 0 : (enteredSelectedType === 'radiographer' ? 1 : (enteredSelectedType === 'analyzer' ? 2 : 3))
 
 
@@ -280,14 +290,14 @@ export const SignUpForm = () => {
             if (!response.ok) {
                 const data = await response.json()
                 console.log(data)
-               
+
                 throw data;
             }
             const data = await response.json()
             console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-            
+
             if (data.data.message === 'register has been successfully. Please waiting to confrim. maybe take 24 hours.') {
-                toast.success('تم تسجيل الحساب الرجاء الانتظار حتى يتم تأكيد الحساب بحدود ال 24 ساعة',{
+                toast.success('تم تسجيل الحساب الرجاء الانتظار حتى يتم تأكيد الحساب بحدود ال 24 ساعة', {
 
                     position: "top-right",
                     autoClose: 1000,
@@ -295,7 +305,7 @@ export const SignUpForm = () => {
                     closeOnClick: true,
                     draggable: true,
                     progress: undefined,
-                    theme: "light",   
+                    theme: "light",
                 })
                 setTimeout(() => {
                     nav('/')
@@ -307,23 +317,10 @@ export const SignUpForm = () => {
 
 
         } catch (error) {
-            const hasErrors =error.errors? true:false;
+            console.log(error)
+            const hasErrors = error.errors ? true : false;
             if (
-                // error.errors.Phone !== '' ||
-                // error.errors.SyrId !== '' ||
-                // error.errors.Gender !== '' ||
-                // error.errors.RoleId !== '' ||
-                // error.errors.Address !== '' ||
-                // error.errors.BirthDay !== '' ||
-                // error.errors.FullName !== '' ||
-                // error.errors.Password !== '' ||
-                // error.errors.BloodGroup !== '' ||
-                // error.errors.Governorate !== '' ||
-                // error.errors.identifyCard !== '' ||
-                // error.errors.MedicalNumber !== '' ||
-                // error.errors.Specialization !== '' ||
-                // error.errors.forgroundImageCardDoctor !== '' ||
-                // error.errors.backgroundImageCardDoctor !== ''
+
                 hasErrors
             ) {
                 toast.warning('أحد الحقول فارغة', {
@@ -335,7 +332,7 @@ export const SignUpForm = () => {
                     progress: undefined,
                     theme: "light",
                 })
-            }  if (error.message === 'the Syrid or phone or medical id is wrong.') {
+            } if (error.message === 'the Syrid or phone or medical id is wrong.') {
                 toast.warning('الرقم الوطني أو الرقم الطبي مستخدم', {
                     position: "top-right",
                     autoClose: 1000,
@@ -345,14 +342,29 @@ export const SignUpForm = () => {
                     progress: undefined,
                     theme: "light",
                 })
-            } else {
-                toast.error('حدث خطأ ما الرجاء إعادة المحاولة',{position: "top-right",
+            }else if(error.message==='extension not allowed'){
+
+                toast.warning('الصور غير مسموحة', {
+                    position: "top-right",
                     autoClose: 1000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     draggable: true,
                     progress: undefined,
-                    theme: "light",})
+                    theme: "light",
+                })
+            }
+            
+            else {
+                toast.error('حدث خطأ ما الرجاء إعادة المحاولة', {
+                    position: "top-right",
+                    autoClose: 1000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                })
             }
 
         }
@@ -407,10 +419,56 @@ export const SignUpForm = () => {
     }
     const configurationBirthDaySignUp = {
         type: 'date',
-        label: ''
+        label: 'تاريخ الميلاد'
 
     }
 
+
+
+    
+  
+    console.log(selectedSpecialization)
+    useEffect(() => {
+        const fetchSuggestions = async () => {
+          try {
+           
+            if (enteredSpecialization.length >= 1) {
+              const response = await fetch(`http://localhost:8000/v1/Specialization/searchSpecialization/${enteredSpecialization}`,{
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZGRkZCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6ImRvY3RvciIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6IjkiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiIwOTY4OTM1MzQ3IiwiZXhwIjoxNjk5OTYyNDQ0LCJpc3MiOiJTZWN1cmVBcGkiLCJhdWQiOiJTZWN1cmVBcGkifQ.G9KLNs_u1px66iab5wIZCd3yIPG7lKwHAYHU8rRD2Yo`
+
+
+            },
+              });
+              
+              if (!response.ok) {
+                console.log(response)
+                throw new Error('Network response was not ok');
+              }
+    
+              const data = await response.json();
+              if (data.data) {
+                setSuggestions(data.data.data);
+              } else {
+                setSuggestions([]);
+              }
+            } else {
+              setSuggestions([]);
+            }
+          } catch (error) {
+            console.error('Error fetching suggestions:', error);
+          }
+        };
+    
+        fetchSuggestions();
+      }, [enteredSpecialization]);
+    
+      const handleSuggestionClick = suggestion => {
+        setSelectedSpecialization(suggestion);
+        setEnteredSpecialization(suggestion.name);
+        setSuggestions([]);
+      };
 
     return (
 
@@ -504,7 +562,16 @@ export const SignUpForm = () => {
                             value={enteredSpecialization}
                             isInvalid={SpecializationInputIsInvalid}
                         />
-                        {SpecializationInputIsInvalid && <p className='error-text'>الاختصاص فارغ .</p>}
+                        {SpecializationInputIsInvalid && <p className='error-text'>الاختصاص غير موجود .</p>}
+                        {suggestions.length > 0 && (
+                            <ul className={classes.list}>
+                                {suggestions.map(suggestion => (
+                                    <li key={suggestion.id} onClick={() => handleSuggestionClick(suggestion)}>
+                                        {suggestion.name}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>}
                 </div>
                 <div className={classes.Second_Section}>
@@ -517,7 +584,7 @@ export const SignUpForm = () => {
                             onBlur={SelectedTypeInputBlurHandler}
                             value={enteredSelectedType}
                         >
-                            <option className={classes.option} value='الفئة الطبية' > الفئة  الطبية </option>
+                            <option className={classes.option} value='الفئةالطبية' > الفئة الطبية </option>
                             <option className={classes.option} value="doctor">طبيب</option>
                             <option className={classes.option} value="radiographer">مصور أشعة</option>
                             <option className={classes.option} value="analyzer">مخبري</option>
@@ -537,7 +604,7 @@ export const SignUpForm = () => {
                             onBlur={SelectedGenderInputBlurHandler}
                             value={enteredSelectedGender}
                         >
-                            <option className={classes.option} value='الحنس' >الجنس</option>
+                            <option className={classes.option} value='الجنس' >الجنس</option>
                             <option className={classes.option} value="male">ذكر</option>
                             <option className={classes.option} value="female"> أنثى</option>
 
@@ -558,9 +625,9 @@ export const SignUpForm = () => {
                         >
                             <option className={classes.option} value='المحافظة' >المحافظة</option>
                             <option className={classes.option} value="Damascus">دمشق</option>
-                            <option className={classes.option} value="Rif Dimashq">ريف دمشق</option>
+                            <option className={classes.option} value="Rural Damascus">ريف دمشق</option>
                             <option className={classes.option} value="Latakia">اللاذقية</option>
-                            <option className={classes.option} value="Tartous">طرطوس</option>
+                            <option className={classes.option} value="Tartus">طرطوس</option>
                             <option className={classes.option} value="Homs">حمص</option>
                             <option className={classes.option} value="Aleppo">حلب</option>
                             <option className={classes.option} value="Hama">حماة</option>
@@ -570,7 +637,7 @@ export const SignUpForm = () => {
                             <option className={classes.option} value="Al-Hasakah">الحسكة</option>
                             <option className={classes.option} value="Deir ez-Zor">دير الزور</option>
                             <option className={classes.option} value="Quneitra">القنيطرة</option>
-                            <option className={classes.option} value="As-Suwayda">السويداء</option>
+                            <option className={classes.option} value="Sweida">السويداء</option>
 
 
                         </select>
@@ -677,9 +744,7 @@ export const SignUpForm = () => {
                 <div className={classes.Fourth_Section}>
                     <button disabled={!formIsValid}> تسجيل </button>
                 </div>
-                {/* <Link to={'/signup'}>
-                        <button className={classes.signup}> للتسجيل <FontAwesomeIcon style={{ color: '#1B1212', fontSize: '12px', fontWeight: '600' }} icon={faArrowLeftLong} /></button>
-                    </Link> */}
+
 
             </form>
 

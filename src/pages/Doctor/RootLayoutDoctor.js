@@ -5,7 +5,7 @@ import classes from './RootLayoutDoctor.module.css'
 import { Nav } from '../../components/Ui/Nav'
 import { Sidebar } from '../../components/Ui/Sidebar'
 import LoadingBar from 'react-top-loading-bar'
-import { faLaptopMedical, faRegistered, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { faLaptopMedical, faRegistered, faRightFromBracket,faUserCircle } from '@fortawesome/free-solid-svg-icons'
 import { Helmet } from 'react-helmet'
 
 export const RootLayoutDoctor = () => {
@@ -19,19 +19,24 @@ export const RootLayoutDoctor = () => {
 
         {
             name: 'السجل الصحي',
-            path: 'HealthRecord',
+            path: '/DashboardDoctor/HealthRecord',
             icon: faLaptopMedical
         },
         {
             name: 'تسجيل مريض',
-            path: 'Patient_Registration',
+            path: '/DashboardDoctor/Patient_Registration',
             icon: faRegistered
         },
         {
+            name:'بروفايلي',
+            path:`/DashboardDoctor/Profile/${localStorage.getItem('idSyr')  }`,
+            icon:faUserCircle
+        },
+        {
             name: 'تسجيل الخروج',
-            path: "../../logout",
-            icon: faRightFromBracket
-        }
+            path: "/logout",
+            icon: faRightFromBracket,
+        },  
     ]
 
     const svgPartOne = [
@@ -44,6 +49,11 @@ export const RootLayoutDoctor = () => {
             icon: faRegistered,
             explanation: 'تسجيل مريض',
             path: 'Patient_Registration'
+        },
+        {
+            path:`/DashboardDoctor/Profile/${localStorage.getItem('idSyr')}}`,
+            explanation:'بروفايلي',
+            icon:faUserCircle
         },
         {
             path: '../../logout',

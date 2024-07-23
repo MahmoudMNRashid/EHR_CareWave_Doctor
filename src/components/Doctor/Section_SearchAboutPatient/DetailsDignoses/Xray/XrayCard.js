@@ -9,9 +9,11 @@ import { ModalForShowPhotos } from './ModalForShowPhotos'
 import { ModalForAddXray } from './ModalForAddXray'
 import { getToken } from '../../../../../Util/Auth'
 import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import LoadingBar from 'react-top-loading-bar'
 export const XrayCard = (props) => {
+   
+    const { IdSyr, IdDiagnose } = useParams()
     // _______________________________________________________
     const [ModalEditXrayIsOpen, setModalEditXrayIsOpen] = useState(false)
     const handleOpenModalEditXrayIsOpen = _ => setModalEditXrayIsOpen(true)
@@ -34,7 +36,7 @@ export const XrayCard = (props) => {
     const getPhotos = (Photos, isDo) => {
         setPhotos(Photos)
         setIsDo1(isDo)
-        console.log(Photos)
+      
         handleOpenModalShowPhotosofXrayIsOpen()
     }
     // __________________________________________
@@ -43,11 +45,7 @@ export const XrayCard = (props) => {
     const handleCLoseModalForAddXrayIsOpen = _ => setModalForAddXrayIsOpen(false)
 
 
-    const infoForaddXray = {
-        idSyr: props.info.idSyr,
-        idDiagnose: props.info.idDiagnose,
-        fullPath: props.info.fullPath
-    }
+
     //___________________________________
     const nav = useNavigate()
     const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +78,7 @@ export const XrayCard = (props) => {
                     theme: "light",
                 })
 
-                nav(`/DashboardDoctor/HealthRecord/${props.info.idSyr}/${props.info.fullPath}`, { replace: true });
+                nav(`/DashboardDoctor/HealthRecord/${IdSyr}/${IdDiagnose}`, { replace: true });
             }
             setIsLoading(false)
 
@@ -158,7 +156,7 @@ export const XrayCard = (props) => {
                 </div>
 
 
-                {props.info.isHasPermission && <button onClick={handleOpenModalForAddXrayIsOpen}><FontAwesomeIcon icon={faAdd} /> </button>}
+                {props.info.extra.isHasPermission && !props.info.extra.isHasResult  && <button onClick={handleOpenModalForAddXrayIsOpen}><FontAwesomeIcon icon={faAdd} /> </button>}
 
 
             </div>
@@ -167,6 +165,25 @@ export const XrayCard = (props) => {
                 {
                     props.info.xrays.length > 0 ? (
                         props.info.xrays.map((item) => {
+
+                            var apiDate = new Date(item.dateRequest); // Assuming the date is in UTC
+                            var timeZoneOffset = new Date().getTimezoneOffset() / -60; // Convert to hours and negate
+                            var offsetHours = timeZoneOffset;
+                            var adjustedDate = new Date(apiDate.getTime() + offsetHours * 60 * 60 * 1000);
+                            const options = { year: "numeric", month: "long", day: "numeric" };
+                            const formattedAdjustedDate = adjustedDate.toLocaleDateString("ar", options);
+                            const hours = adjustedDate.getHours();
+                            const minutes = adjustedDate.getMinutes();
+                            const dateRequest = `${formattedAdjustedDate}`
+
+                            var apiDate1 = new Date(item.dateUpload); // Assuming the date is in UTC
+                            // Convert to hours and negate
+                            var adjustedDate1 = new Date(apiDate1.getTime() + offsetHours * 60 * 60 * 1000);
+
+                            const formattedAdjustedDate1 = adjustedDate1.toLocaleDateString("ar", options);
+                            const hours1 = adjustedDate1.getHours();
+                            const minutes1 = adjustedDate1.getMinutes();
+                            const dateUpload = `${formattedAdjustedDate1}`
 
 
 
@@ -182,15 +199,17 @@ export const XrayCard = (props) => {
 
                                         </div>
 
+                                        {item.isDo === false && <p className={classes.req}>{dateRequest}</p>}
+                                        {item.isDo === true && <p className={classes.upl}>{dateUpload}</p>}
 
                                     </div>
 
                                     {item.isDo === false ? <p> لم تجهز الصور بعد</p> : <button onClick={() => { getPhotos(item.paths, item.isDo) }} className={classes.after}>الصور جاهزة<FontAwesomeIcon icon={faLongArrowLeft} /></button>}
                                     <div className={classes.containerButtons}>
-                                        {item.isDo === false && props.info.isHasPermission && <button onClick={() => {
+                                        {item.isDo === false && props.info.extra.isHasPermission && <button onClick={() => {
                                             handleCollectData(isDo, item.id, item.name)
                                         }}> <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon></button>}
-                                        {item.isDo === false && props.info.isHasPermission && <button onClick={() => {
+                                        {item.isDo === false && props.info.extra.isHasPermission && <button onClick={() => {
                                             handleDeleteXray(item.id)
                                         }}> <FontAwesomeIcon color='#f05261' icon={faTrashAlt}></FontAwesomeIcon></button>}
 
@@ -206,11 +225,11 @@ export const XrayCard = (props) => {
                         })
 
 
-                    ) : (<p> sdsds</p>)
+                    ) : (<p> لا يوجد صور شعاعية</p>)
                 }
-                {isDo === false && props.info.isHasPermission && ModalEditXrayIsOpen && <ModalForEditXray close={handleCLoseModalEditXrayIsOpen} info={info} idSyr={props.info.idSyr} fullPath={props.info.fullPath} />}
+                {isDo === false && props.info.extra.isHasPermission && ModalEditXrayIsOpen && <ModalForEditXray close={handleCLoseModalEditXrayIsOpen} info={info}  />}
                 {isDo1 === true && ModalShowPhotosofXrayIsOpen && <ModalForShowPhotos close={handleCLoseModalShowPhotosofXrayIsOpen} Photos={Photos} />}
-                {props.info.isHasPermission && ModalForAddXrayIsOpen && <ModalForAddXray close={handleCLoseModalForAddXrayIsOpen} info={infoForaddXray} />}
+                {props.info.extra.isHasPermission && ModalForAddXrayIsOpen && <ModalForAddXray close={handleCLoseModalForAddXrayIsOpen}  />}
             </div>
 
             {isLoading && <LoadingBar shadowStyle={{ display: 'none' }} color='#31af99' progress={100} height={5} loaderSpeed={15000} transitionTime={15000} />}

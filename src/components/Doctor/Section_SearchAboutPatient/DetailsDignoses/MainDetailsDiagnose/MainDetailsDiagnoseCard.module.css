@@ -10,6 +10,23 @@
     box-shadow: 5px 5px 15px 1px rgba(0, 0, 0, 0.2);
     width: 300px;
     /* #4f5e75 */
+    position: relative;
+}
+.pos{
+    position: absolute;
+    bottom:5px;
+    left: 20px;
+    color: #4f5e75
+    ;
+    font-size: 10px;
+
+
+}
+.pos div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:5px;
 }
 
 .title {
@@ -32,6 +49,7 @@
 }
 
 .contaienerInfo {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -45,6 +63,7 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
+    
 }
 
 .info img {
@@ -66,9 +85,11 @@
     align-self: flex-start;
 }
 
-.info:nth-child(3) p {
+.info:nth-child(3) p,.test {
     height: 78px;
     overflow: auto auto;
+    /* background-color: #4f5e75; */
+    
     
 }
 

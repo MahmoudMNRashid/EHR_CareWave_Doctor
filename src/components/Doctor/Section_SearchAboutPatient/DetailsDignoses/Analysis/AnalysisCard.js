@@ -9,10 +9,12 @@ import { ModalForShowResultofAnalysis } from './ModalForShowResultofAnalysis'
 import { ModalForAddAnalysis } from './ModalForAddAnalysis'
 import { getToken } from '../../../../../Util/Auth'
 import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import LoadingBar from 'react-top-loading-bar'
 
 export const AnalysisCard = (props) => {
+   
+    const { IdSyr, IdDiagnose } = useParams()
     // _______________________________________________________
     const [ModalEditAnalysisIsOpen, setModalEditAnalysisIsOpen] = useState(false)
     const handleOpenModalEditAnalysisIsOpen = _ => setModalEditAnalysisIsOpen(true)
@@ -35,7 +37,7 @@ export const AnalysisCard = (props) => {
     const getResult = (result, isDo) => {
         setresult(result)
         setIsDo1(isDo)
-        console.log(result)
+
         handleOpenModalShowResultofAnalysisIsOpen()
     }
     // __________________________________________
@@ -44,11 +46,7 @@ export const AnalysisCard = (props) => {
     const handleCLoseModalForAddAnalysisIsOpen = _ => setModalForAddAnalysisIsOpen(false)
 
 
-    const infoForaddAnalysis = {
-        idSyr: props.info.idSyr,
-        idDiagnose: props.info.idDiagnose,
-        fullPath: props.info.fullPath
-    }
+
     //___________________________________
     const nav = useNavigate()
     const [isLoading, setIsLoading] = useState(false);
@@ -81,7 +79,7 @@ export const AnalysisCard = (props) => {
                     theme: "light",
                 })
 
-                nav(`/DashboardDoctor/HealthRecord/${props.info.idSyr}/${props.info.fullPath}`, { replace: true });
+                nav(`/DashboardDoctor/HealthRecord/${IdSyr}/${IdDiagnose}`, { replace: true });
             }
 
 
@@ -155,7 +153,7 @@ export const AnalysisCard = (props) => {
                 </div>
 
 
-                {props.info.isHasPermission && <button onClick={handleOpenModalForAddAnalysisIsOpen}><FontAwesomeIcon icon={faAdd} /> </button>}
+                {props.info.extra.isHasPermission && !props.info.extra.isHasResult && <button onClick={handleOpenModalForAddAnalysisIsOpen}><FontAwesomeIcon icon={faAdd} /> </button>}
 
 
             </div>
@@ -165,6 +163,24 @@ export const AnalysisCard = (props) => {
                     props.info.analysis.length > 0 ? (
                         props.info.analysis.map((item) => {
 
+                            var apiDate = new Date(item.dateRequest); // Assuming the date is in UTC
+                            var timeZoneOffset = new Date().getTimezoneOffset() / -60; // Convert to hours and negate
+                            var offsetHours = timeZoneOffset;
+                            var adjustedDate = new Date(apiDate.getTime() + offsetHours * 60 * 60 * 1000);
+                            const options = { year: "numeric", month: "long", day: "numeric" };
+                            const formattedAdjustedDate = adjustedDate.toLocaleDateString("ar", options);
+                            const hours = adjustedDate.getHours();
+                            const minutes = adjustedDate.getMinutes();
+                            const dateRequest = `${formattedAdjustedDate}`
+
+                            var apiDate1 = new Date(item.dateUpload); // Assuming the date is in UTC
+                            // Convert to hours and negate
+                            var adjustedDate1 = new Date(apiDate1.getTime() + offsetHours * 60 * 60 * 1000);
+
+                            const formattedAdjustedDate1 = adjustedDate1.toLocaleDateString("ar", options);
+                            const hours1 = adjustedDate1.getHours();
+                            const minutes1 = adjustedDate1.getMinutes();
+                            const dateUpload = `${formattedAdjustedDate1}`
 
 
                             return (
@@ -178,16 +194,17 @@ export const AnalysisCard = (props) => {
                                             <p>{item.name}</p>
 
                                         </div>
-
+                                        {item.isDo === false && <p className={classes.req}>{dateRequest}</p>}
+                                        {item.isDo === true && <p className={classes.upl}>{dateUpload}</p>}
 
                                     </div>
 
                                     {item.isDo === false ? <p> لم تظهر النتيجة بعد</p> : <button onClick={() => { getResult(item.result, item.isDo) }} className={classes.after}>النتيجة جاهزة<FontAwesomeIcon icon={faLongArrowLeft} /></button>}
                                     <div className={classes.containerButtons}>
-                                        {item.isDo === false && props.info.isHasPermission && <button onClick={() => {
+                                        {item.isDo === false && props.info.extra.isHasPermission && <button onClick={() => {
                                             handleCollectData(isDo, item.id, item.name)
                                         }}> <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon></button>}
-                                        {item.isDo === false && props.info.isHasPermission && <button onClick={() => {
+                                        {item.isDo === false && props.info.extra.isHasPermission && <button onClick={() => {
                                             handleDeleteAnalysis(item.id)
                                         }}> <FontAwesomeIcon color='#f05261' icon={faTrashAlt}></FontAwesomeIcon></button>}
 
@@ -203,11 +220,11 @@ export const AnalysisCard = (props) => {
                         })
 
 
-                    ) : (<p> sdsds</p>)
+                    ) : (<p> لا يوجد تحاليل</p>)
                 }
-                {isDo === false && props.info.isHasPermission && ModalEditAnalysisIsOpen && <ModalForEditAnalysis close={handleCLoseModalEditAnalysisIsOpen} info={info} idSyr={props.info.idSyr} fullPath={props.info.fullPath} />}
+                {isDo === false && props.info.extra.isHasPermission && ModalEditAnalysisIsOpen && <ModalForEditAnalysis close={handleCLoseModalEditAnalysisIsOpen} info={info} idSyr={props.info.idSyr} fullPath={props.info.fullPath} />}
                 {isDo1 === true && ModalShowResultofAnalysisIsOpen && <ModalForShowResultofAnalysis close={handleCLoseModalShowResultofAnalysisIsOpen} result={result} />}
-                {props.info.isHasPermission && ModalForAddAnalysisIsOpen && <ModalForAddAnalysis close={handleCLoseModalForAddAnalysisIsOpen} info={infoForaddAnalysis} />}
+                {props.info.extra.isHasPermission && ModalForAddAnalysisIsOpen && <ModalForAddAnalysis close={handleCLoseModalForAddAnalysisIsOpen} />}
             </div>
 
             {isLoading && <LoadingBar shadowStyle={{ display: 'none' }} color='#31af99' progress={100} height={5} loaderSpeed={15000} transitionTime={15000} />}

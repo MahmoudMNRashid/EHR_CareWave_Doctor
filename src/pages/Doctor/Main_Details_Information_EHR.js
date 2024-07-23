@@ -1,6 +1,6 @@
 import React from 'react'
 import classes from './Main_Details_Information_EHR.module.css'
-import { redirect, useLoaderData } from 'react-router-dom'
+import { json, redirect, useLoaderData } from 'react-router-dom'
 import { getToken } from '../../Util/Auth'
 import { ToastContainer, toast } from 'react-toastify'
 import { ChronicDiseasesCard } from '../../components/Doctor/Section_SearchAboutPatient/Main_Details_Information_EHR/Chronic/ChronicDiseasesCard'
@@ -15,18 +15,8 @@ import { Helmet } from 'react-helmet'
 export const MainDetailsInformationEHR = () => {
     // _____________________
     const BigData = useLoaderData()
+    console.log('bigdata', BigData)
 
-    // _____________________
-    // const [AddDiagnosesModal, setAddDiagnosesModal] = useState(false)
-    // const handleopenAddDiagnosesModal = _ => setAddDiagnosesModal(true);
-    // const handlecloseAddDiagnosesModal = _ => setAddDiagnosesModal(false);
-
-    // const nav = useNavigate()
-    // const buttonClickChangeHandler = (idDiagnose, isHasPermission, nameDisease, date) => {
-
-    //     nav(`${idDiagnose}+${isHasPermission}+${nameDisease}+${date}`)
-    // }
-    // __________________________
     const currentYear = new Date().getFullYear();
     const yearOfBirth = currentYear - BigData.patientInformation.age;
     const mainPatient = {
@@ -36,8 +26,8 @@ export const MainDetailsInformationEHR = () => {
         year: yearOfBirth,
         bloodType: BigData.patientInformation.bloodGroup,
         address: BigData.patientInformation.address,
-        phone: '',
-        governorate: ''
+        phone: BigData.patientInformation.phone,
+        governorate: BigData.patientInformation.governorate
     }
     // __________________________
     const chronic = {
@@ -69,7 +59,7 @@ export const MainDetailsInformationEHR = () => {
 
 
     const diagnoses = BigData.mainDiagnoses
-    const idSyr= BigData.idSyr
+    const idSyr = BigData.idSyr
     const idPatient = BigData.patientInformation.id
     // __________________________
 
@@ -112,7 +102,15 @@ export const api = async ({ params }) => {
         })
 
         if (!response.ok) {
-            throw new Error('error')
+            const data = await response.json()
+            console.log(data.message)
+            if (data.message === `Can't found account.`) {
+                throw new Error('error')
+            }
+            else {
+                throw new Error('server')
+            }
+
         }
 
         const data = await response.json()
@@ -125,8 +123,10 @@ export const api = async ({ params }) => {
 
             },
         })
+        console.log(response1)
         if (!response1.ok) {
-            throw new Error('error')
+
+            throw new Error('server')
         }
         const data1 = await response1.json()
 
@@ -148,8 +148,33 @@ export const api = async ({ params }) => {
         // return BigData
 
     } catch (error) {
-        toast.error('حدث خطأ ما')
-        return redirect('/DashboardDoctor/HealthRecord')
+        if (error.message === `error`) {
+            // toast.warning('الرقم الوطني غير موجود', {
+            //     position: "top-right",
+            //     autoClose: 1000,
+            //     hideProgressBar: false,
+            //     closeOnClick: true,
+            //     draggable: true,
+            //     progress: undefined,
+            //     theme: "light",
+            // })
+            // return redirect('/DashboardDoctor/HealthRecord')
+            throw new Error('الرقم الوطني غير موجود')
+        } else if (error.message === `server`) {
+            throw new Error('server')
+        }
+        else {
+            toast.error('حدث خطأ ما', {
+                position: "top-right",
+                autoClose: 1000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            })
+        }
+
     }
 
 

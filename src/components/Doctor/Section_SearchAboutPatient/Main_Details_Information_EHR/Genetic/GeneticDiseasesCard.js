@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import classes from './GeneticDiseasesCard.module.css'
 import dna from '../../../../../style/MainDiseases/dna.png'
 import disease from '../../../../../style/MainDiseases/hypoallergenic.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAdd, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faAdd, faAngleDown, faAngleUp, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { ModalForAddVaccineOrDiseases } from '../Modals/ModalForAddVaccineOrDiseases'
 import { ModalForEditVaccineOrDiseases } from '../Modals/ModalForEditVaccineOrDiseases'
 export const GeneticDiseasesCard = (props) => {
@@ -35,19 +35,35 @@ export const GeneticDiseasesCard = (props) => {
     })
     handleOpenmodalEditVaccineOrDiseases()
     }
+    const divRef = useRef(null);
 
+    const handleScrollDown = () => {
+      divRef.current.scrollTo({
+        top: divRef.current.scrollTop + 100,
+        behavior: 'smooth',
+      });
+    };
+  
+    const handleScrollUp = () => {
+      divRef.current.scrollTo({
+        top: divRef.current.scrollTop - 100,
+        behavior: 'smooth',
+      });
+    };
   return (
 <>
     <div className={classes.container}>
+    {props.info.diseases.length > 4 && <button onClick={handleScrollUp} className={classes.up}><FontAwesomeIcon color={'#2b1b9d'} icon={faAngleUp} /> </button>}
+        {props.info.diseases.length > 4 && <button onClick={handleScrollDown} className={classes.down}><FontAwesomeIcon color={'#2b1b9d'} icon={faAngleDown} /> </button>}
       <div className={classes.title}>
        <div>
        <img src={dna} alt='dna' />
         <p> الامراض الوراثية</p>
        </div>
 
-       <button onClick={handleOpenmodalAddVaccineOrDiseases}> <FontAwesomeIcon icon={faAdd} />   </button>
+<button onClick={handleOpenmodalAddVaccineOrDiseases}> <FontAwesomeIcon icon={faAdd} />   </button>       
       </div>
-      <div className={classes.containerDiseases}>
+      <div ref={divRef}   className={classes.containerDiseases}>
 
    
       {props.info.diseases.length ? (props.info.diseases.map((item) => {

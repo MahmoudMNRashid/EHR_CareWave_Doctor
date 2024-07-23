@@ -14,28 +14,20 @@ export const FormPatientRegistration = () => {
     }
     const [enteredidSyr, setEnteredidSyr] = useState('');
     const [enteredidSyrTouched, setEnteredidSyrTouched] = useState(false);
-
     const [enteredPassword, setEnteredPassword] = useState('');
     const [enteredPasswordTouched, setEnteredPasswordTouched] = useState(false);
-
     const [enteredFullName, setEnteredFullName] = useState('');
     const [enteredFullNameTouched, setEnteredFullNameTouched] = useState(false);
-
     const [enteredPhone, setEnteredPhone] = useState('');
     const [enteredPhoneTouched, setEnteredPhoneTouched] = useState(false);
-
     const [enteredAddress, setEnteredAddress] = useState('');
     const [enteredAddressTouched, setEnteredAddressTouched] = useState(false);
-
     const [enteredGovernorate, setEnteredGovernorate] = useState('');
     const [enteredGovernorateTouched, setEnteredGovernorateTouched] = useState(false);
-
     const [enteredGender, setEnteredGender] = useState('');
     const [enteredGenderTouched, setEnteredGenderTouched] = useState(false);
-
     const [enteredBirthDay, setEnteredBirthDay] = useState('');
     const [enteredBirthDayTouched, setEnteredBirthDayTouched] = useState(false);
-
     const [enteredBloodType, setEnteredBloodType] = useState('');
     const [enteredBloodTypeTouched, setEnteredBloodTypeTouched] = useState(false);
 
@@ -45,28 +37,20 @@ export const FormPatientRegistration = () => {
 
     const enteredidSyrIsValid = enteredidSyr.trim().length === 11;
     const idSyrInputIsInvalid = !enteredidSyrIsValid && enteredidSyrTouched;
-
     const enteredFullNameIsValid = enteredFullName.length > 3 && !containsSpecialCharacters(enteredFullName);
     const FullNameInputIsInvalid = !enteredFullNameIsValid && enteredFullNameTouched;
-
     const enteredPhoneIsValid = pattern.test(enteredPhone);
     const PhoneInputIsInvalid = !enteredPhoneIsValid && enteredPhoneTouched;
-
     const enteredAddressIsValid = enteredAddress.trim().length >= 3;
     const AdressInputIsInvalid = !enteredAddressIsValid && enteredAddressTouched;
-
     const enteredGovernorateIsValid = enteredGovernorate.trim() !== 'المحافظة';
     const GovernorateInputIsInvalid = !enteredGovernorateIsValid && enteredGovernorateTouched;
-
     const enteredGenderIsValid = enteredGender.trim() !== 'الجنس';
     const GenderInputIsInvalid = !enteredGenderIsValid && enteredGenderTouched;
-
     const enteredBirthDayIsValid = enteredBirthDay.trim() !== '';
     const BirthDayInputIsInvalid = !enteredBirthDayIsValid && enteredBirthDayTouched;
-
     const enteredBloodtypeIsValid = enteredBloodType.trim() !== 'زمرة الدم';
     const BloodtypeInputIsInvalid = !enteredBloodtypeIsValid && enteredBloodTypeTouched;
-
     const enteredPasswordIsValid = enteredPassword.length > 6;
     const PasswordInputIsInvalid = !enteredPasswordIsValid && enteredPasswordTouched;
 
@@ -173,6 +157,7 @@ export const FormPatientRegistration = () => {
             bloodGroup: enteredBloodType,
         }
 
+        
 
         try {
             const response = await fetch('http://localhost:8000/v1/User/register/Sick', {
@@ -249,33 +234,24 @@ export const FormPatientRegistration = () => {
         }
 
         setIsLoading(false);
-        setEnteredidSyr('');
         setEnteredidSyrTouched(false);
 
-        setEnteredPassword('');
         setEnteredPasswordTouched(false);
 
 
 
-        setEnteredAddress('');
         setEnteredAddressTouched(false);
 
-        setEnteredBirthDay('');
         setEnteredBirthDayTouched(false);
 
-        setEnteredBloodType('');
         setEnteredBloodTypeTouched(false);
 
-        setEnteredFullName('');
         setEnteredFullNameTouched(false);
 
-        setEnteredGender('');
         setEnteredGenderTouched(false);
 
-        setEnteredGovernorate('');
         setEnteredGovernorateTouched(false);
 
-        setEnteredPhone('');
         setEnteredPhoneTouched(false);
     };
 
@@ -306,7 +282,7 @@ export const FormPatientRegistration = () => {
     }
     const configurationBirthDay = {
         type: 'date',
-        label: ''
+        label: 'تاريخ الميلاد'
     }
 
 
@@ -419,9 +395,9 @@ export const FormPatientRegistration = () => {
                         >
                             <option className={classes.option} value='المحافظة' >المحافظة</option>
                             <option className={classes.option} value="Damascus">دمشق</option>
-                            <option className={classes.option} value="Rif Dimashq">ريف دمشق</option>
+                            <option className={classes.option} value="Rural Damascus">ريف دمشق</option>
                             <option className={classes.option} value="Latakia">اللاذقية</option>
-                            <option className={classes.option} value="Tartous">طرطوس</option>
+                            <option className={classes.option} value="Tartus">طرطوس</option>
                             <option className={classes.option} value="Homs">حمص</option>
                             <option className={classes.option} value="Aleppo">حلب</option>
                             <option className={classes.option} value="Hama">حماة</option>
@@ -431,7 +407,7 @@ export const FormPatientRegistration = () => {
                             <option className={classes.option} value="Al-Hasakah">الحسكة</option>
                             <option className={classes.option} value="Deir ez-Zor">دير الزور</option>
                             <option className={classes.option} value="Quneitra">القنيطرة</option>
-                            <option className={classes.option} value="As-Suwayda">السويداء</option>
+                            <option className={classes.option} value="Sweida">السويداء</option>
 
 
                         </select>
@@ -487,7 +463,7 @@ export const FormPatientRegistration = () => {
 
             <ToastContainer />
             {
-                isLoading && <LoadingBar shadowStyle={{ display: 'none' }} color='#31af99' progress={100} height={5} loaderSpeed={15000} transitionTime={15000} />
+                isLoading===true && <LoadingBar shadowStyle={{ display: 'none' }} color='#31af99' progress={100} height={5} loaderSpeed={15000} transitionTime={15000} />
             }
         </div>
 

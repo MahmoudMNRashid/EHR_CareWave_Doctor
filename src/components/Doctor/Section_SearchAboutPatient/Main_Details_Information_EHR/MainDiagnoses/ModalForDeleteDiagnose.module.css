@@ -1,0 +1,35 @@
+.container {
+    background-color: white;
+    border-radius: 12px;
+    width: 300px;
+    height: 1 00px;
+    position: fixed;
+    top: 30%;
+    left: 40%;
+    /* width: 90%; */
+    z-index: 10;
+    box-shadow: 1px 1px 10px lightslategray;
+    padding: 20px;
+
+}
+
+.ps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-size: 0.9rem;
+}
+
+.buttons {
+    margin-top: 20px;
+    gap: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.password {
+    font-size: 0.9rem;
+}

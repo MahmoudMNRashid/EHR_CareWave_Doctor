@@ -1,5 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom';
+import upload from '../../style/RadioGraphers/upload (1).png'
+
 import classes from './ModalForUploadResult.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faUpload } from '@fortawesome/free-solid-svg-icons';
@@ -10,65 +12,61 @@ import { toast } from 'react-toastify';
 import { MainTextArea } from '../Ui/MainTextArea'
 import LoadingBar from 'react-top-loading-bar';
 const ModalAdd = (props) => {
-    console.log(typeof (props.id))
     const { IdSyr, IdDiagnose } = useParams()
-    const [isLoading, setIsLoading] = useState(false);
-    const [enteredDesc, setEnteredDesc] = useState('');
-    const [enteredDescTouched, setEnteredDescTouched] = useState(false);
 
-    const enteredDescIsValid = enteredDesc.trim() !== '';
-    const DescInputIsInvalid = !enteredDescIsValid && enteredDescTouched;
+
+    const [selectedFiles, setSelectedFiles] = useState(new FormData());
 
     let formisValid = false
-    if (enteredDescIsValid) {
-        formisValid = true
+    if (selectedFiles.length > 0) {
+        formisValid = true;
+        console.log(formisValid)
     }
 
-    const DescInputChangeHandler = (event) => {
-        setEnteredDesc(event.target.value);
+    const handleFileSelect = (event) => {
+        const files = event.target.files;
+        const formData = new FormData(); // Create a FormData object
+
+        // Append each file to the FormData object
+        for (let i = 0; i < files.length; i++) {
+            formData.append("file", files[i]);
+        }
+        formData.append('analysisId', props.id)
+        setSelectedFiles(formData);
     };
 
-
-    const DescInputBlurHandler = (event) => {
-        setEnteredDescTouched(true);
-    };
 
     const nav = useNavigate()
-
+    const [isLoading, setIsLoading] = useState(false);
+    console.log(selectedFiles)
     const handleUpload = async (event) => {
         event.preventDefault();
         setIsLoading(true);
-        setEnteredDescTouched(true);
-        if (!enteredDescIsValid) {
+
+        if (!selectedFiles > 0) {
+
             return;
         }
-        const info = {
-            analysisId: props.id,
-            description: enteredDesc,
-        }
-       
-        const arrayinfo = [];
-        arrayinfo.push(info)
-   
+
+
         try {
             const response = await fetch('http://localhost:8001/v1/Aid/give/analysis', {
                 method: 'POST',
-                body: JSON.stringify(arrayinfo),
+                body: selectedFiles,
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `bearer ${getToken()} `
                 }
 
             })
-          
+            console.log(response)
             if (!response.ok) {
                 const data = await response.json()
                 throw data;
             }
             const data = await response.json()
 
-            if (data.data.message === 'Updated successfully.') {
-                toast.success('تم رفع النتيجة', {
+            if(data.data.message==='Updated successfully.'){
+                toast.success('تم رفع الصورة', {
                     position: "top-right",
                     autoClose: 1000,
                     hideProgressBar: false,
@@ -78,17 +76,16 @@ const ModalAdd = (props) => {
                     theme: "light",
                 })
                 nav(`/DashboardMLS/DiagnosesOfPatient/${IdSyr}/${IdDiagnose}`, { replace: true });
-
-
             }
+               
+
+
+            
 
 
         } catch (error) {
-
-
-            const hasErrors = error.errors ? true : false;
-            if (hasErrors) {
-                toast.warning('أحد الحقول فارغة', {
+            if (error.message === `Can't found X_ray.`) {
+                toast.error('!ممنوع التعديل', {
                     position: "top-right",
                     autoClose: 1000,
                     hideProgressBar: false,
@@ -96,8 +93,10 @@ const ModalAdd = (props) => {
                     draggable: true,
                     progress: undefined,
                     theme: "light",
-                })
-            } else {
+                });
+
+            }
+            else {
                 toast.error('! حدث خطأ ما', {
                     position: "top-right",
                     autoClose: 1000,
@@ -114,27 +113,36 @@ const ModalAdd = (props) => {
     };
     return (
         <div className="min-w-screen h-screen animated fadeIn faster  fixed  left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover">
-            <div className={classes.container} >
+             <div className={classes.container} >
                 <div className={classes.title}>
-                    <p> رفع  نتيجة تحليل </p>
+                    <p> رفع  صورة </p>
                     <button onClick={props.close}> <FontAwesomeIcon icon={faClose} /></button>
                 </div>
 
 
                 <div className={classes.u}>
-                    <MainTextArea
-                        onChange={DescInputChangeHandler}
-                        onBlur={DescInputBlurHandler}
-                        value={enteredDesc}
-                        isInvalid={DescInputIsInvalid}
-                        label={' نتيجة التحليل'}
+                    <label htmlFor="fileInput">
+                        <img src={upload} alt="Choose File" />
+                    </label>
+                    <input
+                        id="fileInput"
+                        type="file"
+                        style={{ display: 'none' }}
+                        onChange={handleFileSelect}
+                        multiple
+                        accept="image/*"
+
                     />
+                    {Array.from(selectedFiles.entries()).length > 0 ? <p style={{ display: 'flex', gap: '10px' }}>{Array.from(selectedFiles.getAll('file')).map((file, index) => (
+                       
+                        <span key={index}>{file.name}</span>
+                    ))}</p> : <p>لم يتم اختيار صورة </p>}
                 </div>
 
-                <button disabled={!formisValid} onClick={handleUpload} className={classes.btn} ><FontAwesomeIcon color='#4f5e75' icon={faUpload} /></button>
+                <button onClick={handleUpload} className={classes.btn} ><FontAwesomeIcon color='#31af99' icon={faUpload} /></button>
 
-{isLoading &&  <LoadingBar shadowStyle={{ display: 'none' }} color='#31af99' progress={100} height={5} loaderSpeed={15000} transitionTime={15000} />}
 
+                {isLoading && <LoadingBar shadowStyle={{ display: 'none' }} color='#31af99' progress={100} height={5} loaderSpeed={15000} transitionTime={15000} />}
             </div>
 
         </div>

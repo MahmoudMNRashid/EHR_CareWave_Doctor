@@ -5,11 +5,12 @@ import { MainInput } from '../../../../Ui/MainInput';
 import { toast } from 'react-toastify';
 import { getToken } from '../../../../../Util/Auth';
 import LoadingBar from 'react-top-loading-bar'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faClose, faCheckDouble } from '@fortawesome/free-solid-svg-icons';
 import { MainTextArea } from '../../../../Ui/MainTextArea'
 const ModalEdit = (props) => {
+    const { IdSyr, IdDiagnose } = useParams()
     const nav = useNavigate();
     const [entereddesc, setEntereddesc] = useState('');
     const [entereddescTouched, setEntereddescTouched] = useState(false);
@@ -32,6 +33,7 @@ const ModalEdit = (props) => {
 
     if (entereddescIsValid && enteredDescIsValid) {
         formIsValid = true;
+        console.log(formIsValid)
     }
     const descInputChangeHandler = (event) => {
         setEntereddesc(event.target.value);
@@ -56,7 +58,7 @@ const ModalEdit = (props) => {
         }
 
         const info = {
-            symptomId: props.info.idDiagnose,
+            symptomId: IdDiagnose,
             nameSurgery: entereddesc,
             descriptionSurgery: enteredDesc,
         }
@@ -89,7 +91,7 @@ const ModalEdit = (props) => {
                     theme: "light",
                 })
 
-                nav(`/DashboardDoctor/HealthRecord/${props.info.idSyr}/${props.info.fullPath}`, { replace: true });
+                nav(`/DashboardDoctor/HealthRecord/${IdSyr}/${IdDiagnose}`, { replace: true });
             }
 
 
@@ -170,7 +172,7 @@ const ModalEdit = (props) => {
                             onBlur={DescInputBlurHandler}
                             value={enteredDesc}
                             isInvalid={DescInputIsInvalid}
-                            label={'نص النصيحة'}
+                            label={'وصف عن العملية'}
                         >
                         </MainTextArea>
                         {DescInputIsInvalid && (
@@ -200,7 +202,7 @@ export const ModalForAddSurgery = (props) => {
 
     return (
 
-        ReactDOM.createPortal(<ModalEdit close={props.close} info={props.info} idSyr={props.idSyr} fullPath={props.fullPath} />, document.getElementById('modal'))
+        ReactDOM.createPortal(<ModalEdit close={props.close} />, document.getElementById('modal'))
 
     )
 }

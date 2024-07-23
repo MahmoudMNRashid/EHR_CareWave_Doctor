@@ -4,28 +4,39 @@ import classes from './ModalForShowResultofAnalysis.module.css'
 import info from '../../../../../style/DetailsDiagnose/Analysis/info.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
+import { Carousel } from 'react-bootstrap';
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
-const ModalShow = (props) => {
-
+const Backdrop = (props) => {
     return (
-        <div className="min-w-screen h-screen animated fadeIn faster  fixed  left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover">
+        <div className={classes.backdrop} onClick={props.onClick}></div>
+    );
+};
+const ModalShow = (props) => {
+console.log(props)
+    return (
+        <>
+        <Backdrop onClick={props.close} />
+        <div className={classes.modal}>
+            <Carousel >
 
-            <div className={classes.wrapper}>
-                <div className={classes.first}>
-                    <img src={info} alt='result' />
-                    <p>{props.result}</p>
-                </div>
+                <Carousel.Item style={{ width: '100%' }}>
+                    <TransformWrapper initialScale={1}  >
 
-                <div className={classes.second}><button onClick={props.close}><FontAwesomeIcon icon={faClose} /></button> </div>
-
-
-
-
-            </div>
+                        <TransformComponent>
+                            <img style={{ aspectRatio: '16/12', width: '640px' }} src={`http://localhost:8001${props.result}`} alt="test" />
+                        </TransformComponent>
+                    </TransformWrapper>
+                </Carousel.Item>
 
 
+
+
+            </Carousel>
 
         </div>
+        </>
+
     )
 }
 export const ModalForShowResultofAnalysis = (props) => {

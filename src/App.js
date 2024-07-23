@@ -17,6 +17,8 @@ import { apiGetMainDiagnoses, MainDiagnosesEHR } from "./pages/RadioGraphers/Mai
 import { apiForGetDetailsForDiagnoseForRadioGraphers, DetailsDiagnoseForRadioGraphers } from "./pages/RadioGraphers/DetailsDiagnoseForRadioGraphers";
 import { apiForGetDetailsForDiagnoseForPharmacist, DetailsDiagnoseForPharmacist } from "./pages/Pharmacist/DetailsDiagnoseForPharmacist";
 import { apiForGetDetailsForDiagnoseForMLS, DetailsDiagnoseForMLS } from "./pages/MLS/DetailsDiagnoseForMLS";
+import { MyProfile } from "./pages/Doctor/MyProfile";
+import { MyProfileDetails } from "./pages/Doctor/MyProfileDetails";
 
 
 const router = createBrowserRouter([
@@ -56,7 +58,18 @@ const router = createBrowserRouter([
       },
       {
         path: 'Patient_Registration', element: <PatientRegistration />, loader: loaderForSaveRoutesWithExpForDoctor
-      }
+      },
+      {
+        path:'Profile',loader:loaderForSaveRoutesWithExpForDoctor,children:[
+          {
+            path: ':IdSyr', loader: loaderForSaveRoutesWithExpForDoctor, children: [
+
+              { index: true, element: <MyProfile />, loader: api },
+              { path: ':IdDiagnose', element: <MyProfileDetails />, loader: apiDetailsDiagnose }
+            ]
+          },
+        ]
+      },
     ]
   },
 
@@ -80,7 +93,18 @@ const router = createBrowserRouter([
       },
       {
         path: 'Patient_Registration', element: <PatientRegistration />, loader: loaderForSaveRoutesWithExpForRadioGrapher
-      }
+      },
+      {
+        path:'Profile',loader:loaderForSaveRoutesWithExpForRadioGrapher,children:[
+          {
+            path: ':IdSyr', loader: loaderForSaveRoutesWithExpForRadioGrapher, children: [
+
+              { index: true, element: <MyProfile />, loader: api },
+              { path: ':IdDiagnose', element: <MyProfileDetails />, loader: apiDetailsDiagnose }
+            ]
+          },
+        ]
+      },
 
 
     ]

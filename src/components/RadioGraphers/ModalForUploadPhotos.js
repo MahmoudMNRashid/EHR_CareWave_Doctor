@@ -19,6 +19,7 @@ const ModalAdd = (props) => {
     let formisValid = false
     if (selectedFiles.length > 0) {
         formisValid = true;
+        console.log(formisValid)
     }
 
     const handleFileSelect = (event) => {
